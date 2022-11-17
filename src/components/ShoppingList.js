@@ -10,20 +10,31 @@ function ShoppingList({ items }) {
     setSelectedCategory(event.target.value);
   }
 
-  const itemsToDisplay = items.filter((item) => {
-    if (selectedCategory === "All") return true;
+  const [state, setState] = useState("")
 
-    return item.category === selectedCategory;
-  });
+  function onSearchChange(event) {
+    setState(event.target.value)
+    
+  }
+
+
+  const itemsToDisplay = items
+  .filter((item) => (
+    selectedCategory === "All" || item.category === selectedCategory
+  ))
+  .filter((item) => (
+    item.name.toUpperCase().includes(state.toUpperCase())
+  ))
 
   return (
     <div className="ShoppingList">
       <ItemForm />
-      <Filter onCategoryChange={handleCategoryChange} />
+      <Filter onCategoryChange={handleCategoryChange} onSearchChange={onSearchChange} />
       <ul className="Items">
         {itemsToDisplay.map((item) => (
           <Item key={item.id} name={item.name} category={item.category} />
         ))}
+     
       </ul>
     </div>
   );
